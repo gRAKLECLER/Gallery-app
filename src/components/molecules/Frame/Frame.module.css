@@ -1,0 +1,4 @@
+.frame {
+    border: 3px solid blue;
+    object-fit: cover;
+}
