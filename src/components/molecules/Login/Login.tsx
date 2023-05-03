@@ -4,13 +4,9 @@ import { logOut, signInWithGoogle } from '../../../../src/utils/firebase/authent
 import { useRouter } from 'next/router';
 
 
-interface ProfileCardProps {
-    firstname: string,
-    lastname: string,
-}
 
 
-export default function ProfileCard({firstname, lastname}: ProfileCardProps) {
+export default function ProfileCard() {
 
 const router = useRouter();
 
@@ -18,7 +14,7 @@ const router = useRouter();
 const LoginWithGoogle = () => {
     signInWithGoogle().then(
       () => {
-        router.push('/')
+        router.push('/Gallery')
       }
     ).catch(
       error => {
@@ -27,25 +23,9 @@ const LoginWithGoogle = () => {
     )
   }
 
-  const Logout = () => {
-    logOut().then(
-      () => {
-        router.push('/')
-        console.log('logout');
-        
-      }
-    ).catch(
-      error => {
-        console.log('error logout');
-      }
-    )
-  }
-
     return (
         <div>
-            <h3>{firstname} {lastname}</h3>
             <button onClick={LoginWithGoogle}>login</button>
-            <button onClick={Logout}>logout</button>
         </div>
     )
   }

@@ -1,12 +1,12 @@
+import { AuthContextProvider } from '@/context/auth.context'
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
-import { SessionProvider } from 'next-auth/react';
 
 
 export default function App({ Component,  pageProps: { ...pageProps } }: AppProps) {
   return  (
-  <SessionProvider refetchInterval={55 * 60} basePath="cool-app" refetchOnWindowFocus={true}>
-    <Component {...pageProps} />
-  </SessionProvider>
+    <AuthContextProvider>
+      <Component {...pageProps} />
+    </AuthContextProvider>
   )
 }
