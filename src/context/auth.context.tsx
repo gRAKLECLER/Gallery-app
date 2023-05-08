@@ -15,15 +15,13 @@ export function AuthContextProvider({children}: any) {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    let unsubscribe;
 
-    unsubscribe = onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
     });
 
-    return unsubscribe;
-  }, []);
+  }, [user]);
 
   return (
     <AuthContext.Provider value={{user, loading}}>

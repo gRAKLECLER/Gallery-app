@@ -1,4 +1,15 @@
 .frame {
-    border: 3px solid blue;
     object-fit: cover;
+}
+
+.container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.deleteContent {
+    position: absolute;
+    cursor: pointer;
 }

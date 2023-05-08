@@ -21,11 +21,8 @@ interface ModalProps {
           onClose={(_, reason) => reason === 'backdropClick' && handleModalClose}
           open={isModalOpen}
         >
-          {/* Here are component JSX components (form, message validation,etc...)*/}
-          {/* {handleModalClose && <CloseButton onClick={handleModalClose} />} */}
           {formComponent}
         </ModalDialog>
-        {/* JSX component wich open the modal*/}
         {buttonComponent}
       </Container>
     );

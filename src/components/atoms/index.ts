@@ -29,3 +29,5 @@ export { default as Tooltip } from '@mui/material/Tooltip';
 export { default as Typography } from '@mui/material/Typography';
 export { default as SvgIcon } from '@mui/material/SvgIcon';
 export { default as Select } from '@mui/material/Select';
+export { default as UploadIcon } from '@mui/icons-material/Upload';
+export { default as DeleteOutlineIcon } from '@mui/icons-material/DeleteOutline';

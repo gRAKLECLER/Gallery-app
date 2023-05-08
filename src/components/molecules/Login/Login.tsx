@@ -1,20 +1,25 @@
-import Image from 'next/image'
-import styles from '../ProfileCard/ProfileCard.module.css'
-import { logOut, signInWithGoogle } from '../../../../src/utils/firebase/authentification';
+import { signInWithGoogle } from '../../../../src/utils/firebase/authentification';
 import { useRouter } from 'next/router';
+import { Button } from '@mui/material';
+
+import { Container } from './Login.styles';
 
 
 
 
 export default function ProfileCard() {
 
+
+
 const router = useRouter();
 
 
 const LoginWithGoogle = () => {
+
+
     signInWithGoogle().then(
       () => {
-        router.push('/Gallery')
+        router.push(`/Gallery`)
       }
     ).catch(
       error => {
@@ -24,9 +29,9 @@ const LoginWithGoogle = () => {
   }
 
     return (
-        <div>
-            <button onClick={LoginWithGoogle}>login</button>
-        </div>
+        <Container>
+            <Button variant='contained' onClick={LoginWithGoogle}>Login</Button>
+        </Container>
     )
   }
   

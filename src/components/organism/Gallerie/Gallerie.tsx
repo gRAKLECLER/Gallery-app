@@ -1,62 +1,17 @@
+import { useState, useContext, useEffect } from 'react'
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import Frame from '@/components/molecules/Frame/Frame'
-import ProfileCard from '@/components/molecules/ProfleCard/Profile'
+import ProfileCard from '@/components/molecules/ProfileCard/Profile'
 import { Modal } from '@/components/molecules/Modal/Modal'
 import { CreateGallerieForm } from '@/components/molecules/CreateGallerieForm/CreateGallerieForm'
-import {  } from 'react'
-import { useRouter } from 'next/router';
-import { useState, useContext, useEffect } from 'react'
 import AuthContext from '@/context/auth.context'
-import Login from '@/components/molecules/Login/Login'
+import { getAllGallery } from '@/utils/firebase/gallery.firestore'
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { IconContainer, AddGallerieModal } from './Gallerie.style'
 
 const inter = Inter({ subsets: ['latin'] })
-
-
-const gallery = [
-  {
-    id: 1,
-    src: '/Human.png'
-  },
-  {
-    id: 2,
-    src: '/PXL_20221115_122219617.jpg'
-  },
-  {
-    id: 3,
-    src: '/PXL_20221115_122228380.jpg'
-  },
-  {
-    id: 4,
-    src: '/Human.png'
-  },
-  {
-    id: 5,
-    src: '/PXL_20221115_122219617.jpg'
-  },
-  {
-    id: 6,
-    src: '/PXL_20221115_122228380.jpg'
-  },
-  {
-    id: 7,
-    src: '/Human.png'
-  },
-  {
-    id: 8,
-    src: '/PXL_20221115_122219617.jpg'
-  },
-  {
-    id: 9,
-    src: '/PXL_20221115_122228380.jpg'
-  },
-]
-
-const profile = {
-  firstname: 'Guillaume',
-  lastname: 'RAK'
-}
 
 
 
@@ -64,7 +19,23 @@ export default function Gallerie() {
 const [isModalOpen, setModalOpen] = useState(false);
 
 const {user, loading} = useContext(AuthContext);
-const router = useRouter();
+const [data, setData] = useState<any[]>()
+
+const array = data
+
+useEffect(() => {
+    if(user){
+        getAllGallery().then(el=> setData(el));
+    }
+}, [user])
+
+const userGallery = array?.filter(item => item.userImage.userImageId === user.uid)
+
+
+
+
+
+
 
 const CloseModal = () => {
   setModalOpen(false);
@@ -78,16 +49,17 @@ const CloseModal = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Modal formComponent={<CreateGallerieForm onClose={CloseModal}/>} isModalOpen={isModalOpen} handleModalClose={CloseModal}/>
       <main className={styles.main}>
-        <ProfileCard firstname={profile.firstname} lastname={profile.lastname}/>
-        <button onClick={() => setModalOpen(true)}>open modal</button>
+        <ProfileCard fullName={user.displayName} email={user.email}/>
+        <IconContainer onClick={() => setModalOpen(true)}>
+          <AddGallerieModal color='primary'/>
+        </IconContainer>
         <div className={styles.content}>
-        {gallery.map(item => (
-            <Frame key={item.id}  src={item.src} width={100} height={100} alt=''/>
-        ))}
+            {userGallery?.map(item => (<Frame id={item.id} key={item.id} src={item.userImage.image} width={200} height={200} alt={item.userImage.image}/>))}
         </div>
-      </main> 
+      </main>
+      <Modal formComponent={<CreateGallerieForm galleryArray={data} userId={user.uid} onClose={CloseModal}/>} isModalOpen={isModalOpen} handleModalClose={CloseModal}/>
+      
     </>
   )
 }

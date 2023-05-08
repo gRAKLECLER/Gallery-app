@@ -6,7 +6,7 @@ import { Alert, Box, Typography } from '@/components/atoms';
 export const FormContainer = styled(Box)`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  align-items: center;
   gap: 2rem;
   color: black;
   .${alertClasses.root} {
