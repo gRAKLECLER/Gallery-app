@@ -61,14 +61,14 @@ export const updateGallery = async <T>(collectionName: string, data: any) => {
   })
 }
 
-// export const deleteFrame = async (id: string) => {
-//   try {
-//   const document = doc(db, "Gallery", id);
-//   await deleteDoc(document);
-//   } catch (err) {
-//   console.log(err);
-//   }
-// }
+export const deleteFrame = async (id: string) => {
+  try {
+  const document = doc(getFirestore(), "Gallery", id);
+  await deleteDoc(document);
+  } catch (err) {
+  console.log(err);
+  }
+}
 
 // export const deleteGalleryElement = async (id: string, e: MouseEvent) => {
 //   e.stopPropagation();

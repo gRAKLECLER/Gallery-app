@@ -10,6 +10,8 @@ import AuthContext from '@/context/auth.context'
 import { getAllGallery } from '@/utils/firebase/gallery.firestore'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { IconContainer, AddGallerieModal } from './Gallerie.style'
+import { deleteFrame } from '@/utils/firebase/firebase'
+import { GalleryCollection } from '@/types'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,22 +21,31 @@ export default function Gallerie() {
 const [isModalOpen, setModalOpen] = useState(false);
 
 const {user, loading} = useContext(AuthContext);
-const [data, setData] = useState<any[]>()
+const [data, setData] = useState<any[]>([])
+
 
 const array = data
 
+const userGallery = array?.filter(item => item.userImage.userImageId === user.uid)
+
+const deleteEl = (id: string, e: Event) => {
+  e.stopPropagation();
+  const objWithIdIndex = userGallery?.findIndex((obj) => obj.id === id);
+
+  if (objWithIdIndex !== undefined && objWithIdIndex > -1) {
+    userGallery?.splice(objWithIdIndex, 1);
+  }
+
+  setData([...userGallery])
+  
+  deleteFrame(id)
+}
+
 useEffect(() => {
-    if(user){
+  if(user){
         getAllGallery().then(el=> setData(el));
     }
 }, [user])
-
-const userGallery = array?.filter(item => item.userImage.userImageId === user.uid)
-
-
-
-
-
 
 
 const CloseModal = () => {
@@ -55,7 +66,7 @@ const CloseModal = () => {
           <AddGallerieModal color='primary'/>
         </IconContainer>
         <div className={styles.content}>
-            {userGallery?.map(item => (<Frame id={item.id} key={item.id} src={item.userImage.image} width={200} height={200} alt={item.userImage.image}/>))}
+            {userGallery?.map(item => (<Frame deleteElement={(e) => deleteEl(item.id, e)} key={item.id} src={item.userImage.image} width={300} height={300} alt={item.userImage.image}/>))}
         </div>
       </main>
       <Modal formComponent={<CreateGallerieForm galleryArray={data} userId={user.uid} onClose={CloseModal}/>} isModalOpen={isModalOpen} handleModalClose={CloseModal}/>

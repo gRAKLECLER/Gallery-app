@@ -1,5 +1,6 @@
 import { Container, ModalDialog } from '../Modal/Modal.styles';
 import { ReactNode } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 interface ModalProps {
@@ -21,6 +22,10 @@ interface ModalProps {
           onClose={(_, reason) => reason === 'backdropClick' && handleModalClose}
           open={isModalOpen}
         >
+          {handleModalClose && <div onClick={handleModalClose}>
+            <CloseIcon />
+            </div>
+            }
           {formComponent}
         </ModalDialog>
         {buttonComponent}

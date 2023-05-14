@@ -12,7 +12,7 @@ import {
 import { addGallerie } from '@/utils/firebase/gallery.firestore';
 import Image from 'next/image';
 import { storage } from '@/utils/firebase/firebase';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytesResumable, uploadBytes } from 'firebase/storage';
 import { GalleryCollection } from '@/types';
 import { ButtonContainer, Title, UploadContent, FileUpload, ProgressBarContent } from './CreateGallerieForm.styles';
 
@@ -55,67 +55,52 @@ export const CreateGallerieForm = ({
       );
     }
 
+    const handleSelectFile = (file: any) => {
+      if (file){
+        setPicture(file[0])
+      }else {
+        console.log('error');
+      }
+    }
+
+    const handleRemoveFile = () => setPicture(undefined)
+
+
     const sendGallery = () => {
-            const name = picture?.name 
-            console.log(name);
-            
-            const storageRef = ref(storage, name);
+            const storageRef = ref(storage, `images/${picture?.name}`);
 
             const uploadTask = uploadBytesResumable(storageRef, picture);
 
             uploadTask.on('state_changed', 
-            (snapshot) => {
-              // let inProgress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log('Upload is ' + progress + '% done');
-              switch (snapshot.state) {
-                case 'paused':
-                  console.log('Upload is paused');
-                  break;
-                case 'running':
-                  console.log('Upload is running');
-                  break;
-              }
-            }, 
+            (snapshot) => {}, 
             (error) => {
             console.error(error);
             }, 
             () => {
               getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                setDownloadURL(url)
-                setProgress((uploadTask.snapshot.bytesTransferred / uploadTask.snapshot.totalBytes) * 100);
-                if (downloadURL !== '') {
+                
+                if(url){
+                  console.log(url);
+                  setDownloadURL(url)
+                  setProgress((uploadTask.snapshot.bytesTransferred / uploadTask.snapshot.totalBytes) * 100);
                   const gallery = {
-                  userImage: {
-                    image: downloadURL,
-                    userImageId: userId
+                    userImage: {
+                      image: url,
+                      userImageId: userId
+                    }
                   }
-                }
+                  addGallerie(gallery)
           
-                addGallerie(gallery)
-          
-                galleryArray?.push(gallery)
+                  galleryArray?.push(gallery)
                 }
+                
               });
             }
             
           );
-
-     
-      console.log(galleryArray ,downloadURL, picture);
       
     }
 
-    const handleSelectFile = (file: any) => {
-
-      if (file && file[0].size < 1000000){
-        setPicture(file[0])
-      }else {
-        console.log('error');
-      }
-
-    }
-
-    const handleRemoveFile = () => setPicture(undefined)
 
   return (
     <FormContainer
